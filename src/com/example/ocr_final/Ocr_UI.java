@@ -3,6 +3,7 @@ package com.example.ocr_final;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 
 import javax.servlet.annotation.WebServlet;
@@ -80,7 +81,24 @@ public class Ocr_UI extends UI implements Receiver, SucceededListener {
 			public void buttonClick(ClickEvent event) {
 				// TODO Auto-generated method stub
 //				event.getButton().setCaption("Rotate button clicked");
-				
+				recognize_text rotr = new recognize_text(filepath, ori_filename);
+				try {
+					rotr.rotate();
+					image.setSource(new FileResource(file));
+					String[] final_data= rotr.recognize_textcontent();
+					if(final_data[0]!="undefined"){
+				        res.setValue("Last Name: "+final_data[0]+". First Name: "+final_data[1]+". ID: "+final_data[2]);
+				        }
+				        else{
+				        	res.setValue("Unable to Detect Text");
+				        }
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 

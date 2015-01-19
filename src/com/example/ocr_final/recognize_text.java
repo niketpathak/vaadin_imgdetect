@@ -141,17 +141,17 @@ public class recognize_text {
 	
 	public void rotate() throws IOException, InterruptedException{
 //		 Process p3 = rt.exec("/Program Files/ImageMagick-6.3.9-Q16/mogrify -rotate 90 " + imageName);
-		Process rotate = runtime.exec("convert "+filepath+filename+" -set colorspace Gray -separate -average "+filepath+"grayscaled.jpg");
+		Process rotate = runtime.exec("mogrify -rotate 90 "+filepath+filename);
     	int exitVal_gr = rotate.waitFor();
-    	 BufferedReader input_gr = new BufferedReader(new InputStreamReader(rotate.getInputStream()));
+    	 BufferedReader input_rot = new BufferedReader(new InputStreamReader(rotate.getInputStream()));
          BufferedReader error_if_any_gr = new BufferedReader(new InputStreamReader(rotate.getErrorStream()));
          String line=null;String err =null;
-         while((line=input_gr.readLine()) != null) {
-             System.out.println("output_grayscale->"+line);
+         while((line=input_rot.readLine()) != null) {
+             System.out.println("output_Rotate->"+line);
          	}
          while ((err = error_if_any_gr.readLine()) != null) {
              System.out.println("This is Err_gr Code->"+err);
          }
-    	System.out.println("Grayscale Exit error code "+exitVal_gr);
+    	System.out.println("Rotate Exit error code "+exitVal_gr);
 	}
 }
