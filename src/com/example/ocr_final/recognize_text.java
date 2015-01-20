@@ -78,7 +78,7 @@ public class recognize_text {
 	}
 	
 	public void tesseract_detection() throws IOException, InterruptedException{
-		Process pr_t = runtime.exec("tesseract "+filepath+"grayscaled.jpg "+filepath+"niket1 -l eng+fra");
+		Process pr_t = runtime.exec("tesseract "+filepath+"grayscaled.jpg "+filepath+"niket1 -l eng+fra -psm 1");
         BufferedReader input_t = new BufferedReader(new InputStreamReader(pr_t.getInputStream()));
         BufferedReader error_if_any_t = new BufferedReader(new InputStreamReader(pr_t.getErrorStream()));
         String line=null;String err =null;
@@ -107,31 +107,34 @@ public class recognize_text {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        
         System.out.println("FILE_CONTENT->"+text_cnt);
+        String[] split_con= text_cnt.split(" ");
         try{
-        	if(text_cnt!=""){
-        int indexfound = text_cnt.toUpperCase().indexOf("Nom".toUpperCase()); //indexfound returns index of 'N'
-        String[] all_colin_sep = text_cnt.substring(indexfound+4).split(":");
-        String[] last_name = all_colin_sep[0].split(" ");	//get last name
-        String[] first_name = all_colin_sep[1].split(" ");	//get first name
-        String[] dob = all_colin_sep[3].split(" ");			//get DOB
-        String ret_id_pr = dob[dob.length-1];				//get the last element in array
-        String[] obt = ret_id_pr.split("");					//split it into characters
-        StringBuffer result_buffer = new StringBuffer();
-        for (int i = 0; i < 13; i++) {						
-        	result_buffer.append( obt[i] );					//append the first 15-char viz ID!
+        String process_fn =  split_con[split_con.length-2];	
+        String process_ln =  split_con[split_con.length-1];
+//        System.out.println(Arrays.toString(split_con));
+        System.out.println("FName_p->"+process_fn+" LName_p->"+process_ln);
+        int br_pt=process_fn.indexOf("<")+1;
+        String[] obt = process_fn.split("");					//split it into characters
+      StringBuffer result_buffer = new StringBuffer();
+      for (int i = 6; i < br_pt; i++) {						
+      	result_buffer.append(obt[i]);					//append the char viz fname!
+      }
+      String fname = result_buffer.toString();
+     obt=process_ln.split("");
+     result_buffer=new StringBuffer();
+     for (int i = 0; i < 13; i++) {						
+       	result_buffer.append(obt[i]);					//append the char viz ID!
+       }
+     String id_f = result_buffer.toString();
+     result_buffer=new StringBuffer();
+     for (int i = 14; i < process_ln.length()-8; i++) {						
+        	result_buffer.append(obt[i]);					//append the char viz lname with <<!
         }
-        String identity_no = result_buffer.toString();
-
-        System.out.println("Last Name is ->"+last_name[0]+". FirstName is ->"+first_name[0]+ ". DOB->"+dob[0]+ ". Final_ID No.->"+identity_no+ ". Process_string->"+ret_id_pr);
-        	data[0]=last_name[0];data[1]=first_name[0];data[2]=identity_no;
- 
-        	}
-        	else{
-        					//empty
-        		
-        	}
+     String lname = result_buffer.toString();
+     lname = lname.replaceAll("<<|<", " ");					//remove </<<+
+     System.out.println("f_name->"+fname+". l_name->"+lname+". ID->"+id_f);
+      	data[0]=lname;data[1]=fname;data[2]=id_f;
         }
         catch (Exception e){
         	e.printStackTrace();
