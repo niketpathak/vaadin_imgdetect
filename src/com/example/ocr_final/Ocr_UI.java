@@ -55,9 +55,13 @@ public class Ocr_UI extends UI implements Receiver, SucceededListener {
 		
 		final VerticalLayout layout = new VerticalLayout();
 		layout.setMargin(true);
+//		layout.setSizeFull();		// Needed because the composites are full size by default
 		setContent(layout);
+		UI_composite mycomp = new UI_composite();
+		layout.addComponent(mycomp);
 		layout.addComponent(new Label("The Ultimate Identity Card OCR System"));
 		
+		HorizontalLayout layout_h = new HorizontalLayout();
 		HorizontalSplitPanel hsplit = new HorizontalSplitPanel();
 		layout.addComponent(hsplit);
 
@@ -101,6 +105,9 @@ public class Ocr_UI extends UI implements Receiver, SucceededListener {
 				}
 			}
 		});
+		
+		
+		
 
 	}
 
